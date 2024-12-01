@@ -12,7 +12,7 @@ int main() {
   std::cout << sum << std::endl;
 
   int sum_2 = part_2(input);
-  std::cout << sum_2<< std::endl;
+  std::cout << sum_2 << std::endl;
 }
 
 int part_1(std::array<std::vector<int>, 2> &input) {
