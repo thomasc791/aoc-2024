@@ -4,6 +4,7 @@
 Scanner::Scanner(std::vector<std::string> input) : m_Input(input) {}
 
 void Scanner::lines() {
+  m_Sum = 0;
   for (std::string line : m_Input) {
     m_Line = line;
     m_c = m_Line.begin();
@@ -18,44 +19,42 @@ int Scanner::getSum() { return m_Sum; };
 
 void Scanner::readLine() {
   for (; m_c != m_Line.end(); m_c++) {
-    const char *func = readFunction();
+    readFunction();
   }
 }
-const char *Scanner::readFunction() {
+void Scanner::readFunction() {
   std::string multFun = "mul";
   std::string doFun = "do";
-  std::string dontFun = "don";
+  std::string dontFun = "don't";
   std::stringstream func;
-  for (; isalpha(*m_c); m_c++) {
+  for (; isalpha(*m_c) || std::string(1, *m_c) == "'"; m_c++) {
     func << *m_c;
   }
   if (func.str().find(multFun) != std::string::npos) {
     readToken(multFun);
   }
-  if (func.str().find(doFun) != std::string::npos) {
+  if (func.str().find(dontFun) != std::string::npos && m_Part_2) {
     readDoToken(dontFun);
+  } else if (func.str().find(doFun) != std::string::npos && m_Part_2) {
+    readDoToken(doFun);
   }
-  return "";
 }
 
 bool Scanner::readToken(std::string func) {
+  std::string prevToken = "";
   std::stringstream function;
   if (std::string(1, *m_c) == "(") {
     function << func;
+    prevToken = "(";
+    m_c++;
+  } else {
+    return false;
   }
   std::vector<std::string> numbers = {"", ""};
   bool tokenFinal = false;
-  std::string prevToken = "";
   for (; !tokenFinal; m_c++) {
     const char c = *m_c;
     switch (c) {
-    case '(':
-      if (prevToken == "") {
-        prevToken = "(";
-        function << c;
-        continue;
-      } else
-        return false;
     case ')':
       if (prevToken == "," && m_Add == true) {
         prevToken = ")";
@@ -87,87 +86,33 @@ bool Scanner::readToken(std::string func) {
 
 bool Scanner::readDoToken(std::string func) {
   std::stringstream function;
-
+  std::string prevToken = "";
   bool doBool;
+  bool tokenFinal = false;
+
   if (std::string(1, *m_c) == "(") {
     doBool = true;
+    prevToken = "(";
     function << func;
-  } else if (func == "don") {
-    doBool = false;
-    function << func;
+    function << prevToken;
+    m_c++;
   } else
     return false;
-  bool tokenFinal = false;
-  std::string prevToken = "";
+
   for (; !tokenFinal; m_c++) {
     const char c = *m_c;
     switch (c) {
-    case '(':
-      if (prevToken == "") {
-        prevToken = "(";
-        function << c;
-        continue;
-      } else if (prevToken == "`") {
-        prevToken = "(";
-        function << c;
-        continue;
-      } else
-        return false;
-      break;
     case ')':
       if (prevToken == "(") {
         prevToken = ")";
-        function << c;
-        m_Add = doBool;
+        function << prevToken;
+        m_Add = (func != "don't");
         return true;
       } else
         return false;
-      break;
-    case '`':
-      if (!doBool) {
-        prevToken = "`";
-        function << c;
-      }
-      break;
-    case 't':
-      function << c;
       break;
     default:
-      continue;
-    }
-  }
-  return false;
-}
-
-bool Scanner::readDontToken(std::string func) {
-  std::stringstream function;
-  if (std::string(1, *m_c) != "(") {
-  } else {
-    function << func;
-  }
-
-  bool tokenFinal = false;
-  std::string prevToken = "";
-  for (; !tokenFinal; m_c++) {
-    const char c = *m_c;
-    switch (c) {
-    case '(':
-      if (prevToken == "") {
-        prevToken = "(";
-        function << c;
-        continue;
-      } else
-        return false;
-    case ')':
-      if (prevToken == "(") {
-        prevToken = ")";
-        m_Add = true;
-        return true;
-      } else
-        return false;
       return false;
-    default:
-      continue;
     }
   }
   return false;

@@ -1,5 +1,4 @@
 #include "day-3.h"
-#include "scanner.h"
 #include <algorithm>
 #include <fstream>
 #include <iostream>
@@ -7,13 +6,21 @@
 
 int main() {
   auto input = readinput("input");
+  Scanner scanner(input);
 
-  int sum = part_1_and_2(input);
-  std::cout << "Part 2: " << sum << std::endl;
+  int sum_1 = part_1(scanner);
+  int sum_2 = part_2(scanner);
+  std::cout << "Part 1: " << sum_1 << std::endl;
+  std::cout << "Part 2: " << sum_2 << std::endl;
 }
 
-int part_1_and_2(std::vector<std::string> input) {
-  Scanner scanner(input);
+int part_1(Scanner &scanner) {
+  scanner.lines();
+  return scanner.getSum();
+}
+
+int part_2(Scanner &scanner) {
+  scanner.m_Part_2 = true;
   scanner.lines();
   return scanner.getSum();
 }
