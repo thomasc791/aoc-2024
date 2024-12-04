@@ -6,6 +6,7 @@
 class Scanner {
 public:
   std::vector<std::string> m_Input;
+  bool m_Part_2 = false;
 
   Scanner(std::vector<std::string> input);
 
@@ -19,8 +20,7 @@ private:
   bool m_Add = true;
   std::string::iterator m_c;
   void readLine();
-  const char *readFunction();
+  void readFunction();
   bool readToken(std::string func);
   bool readDoToken(std::string func);
-  bool readDontToken(std::string func);
 };
