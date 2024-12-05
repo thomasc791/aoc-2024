@@ -5,5 +5,5 @@
 std::vector<std::string> readinput(std::string file);
 template <typename T> int part_1(T input);
 template <typename T> int part_2(T input);
-template <typename T> void diagonalStrings(T &input);
+template <typename T> T diagonalStrings(T input);
 int main();

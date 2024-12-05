@@ -15,11 +15,11 @@ int main() {
 }
 
 template <typename T> int part_1(T input) {
-  diagonalStrings(input);
+  T input_1 = diagonalStrings(input);
   std::string xmas = "XMAS";
   std::string samx = "SAMX";
   size_t sum = 0;
-  for (std::string line : input) {
+  for (std::string line : input_1) {
     for (size_t i = 0; (i = line.find(xmas, i)) != std::string::npos;
          i += xmas.size()) {
       sum++;
@@ -28,12 +28,35 @@ template <typename T> int part_1(T input) {
          i += samx.size()) {
       sum++;
     }
-    std::cout << line << std::endl;
   }
   return sum;
 }
 
-template <typename T> void diagonalStrings(T &input) {
+template <typename T> int part_2(T input) {
+  std::string mas = "MAS";
+  std::string sam = "SAM";
+  std::stringstream downStream, upStream;
+  std::string down, up;
+  size_t sum = 0;
+  for (size_t i = 1; i < input[0].size() - 1; i++) {
+    for (size_t j = 1; j < input[0].size() - 1; j++) {
+      downStream.clear();
+      upStream.clear();
+      downStream.str("");
+      upStream.str("");
+      downStream << input[i - 1][j - 1] << input[i][j] << input[i + 1][j + 1];
+      upStream << input[i + 1][j - 1] << input[i][j] << input[i - 1][j + 1];
+      down = downStream.str();
+      up = upStream.str();
+      std::cout << down << ", " << up << std::endl;
+      if ((down == mas || down == sam) && (up == mas || up == sam))
+        sum++;
+    }
+  }
+  return sum;
+}
+
+template <typename T> T diagonalStrings(T input) {
   size_t vertSize = input.size();
   size_t horiSize = input[0].size();
   input.resize(vertSize + horiSize);
@@ -94,11 +117,7 @@ template <typename T> void diagonalStrings(T &input) {
       vert_j++;
     }
   }
-}
-
-template <typename T> int part_2(T input) {
-  std::string xmas;
-  return 0;
+  return input;
 }
 
 std::vector<std::string> readinput(std::string file) {
